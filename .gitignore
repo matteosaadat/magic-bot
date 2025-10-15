@@ -1,0 +1,25 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+
+# Environment / secrets
+.env
+.env.*
+
+# OS / Editor junk
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Node (future)
+node_modules/
+
+# Docker / CI artifacts
+*.log
+*.pid
+*.db
+*.sqlite
+infra/docker/tmp/
