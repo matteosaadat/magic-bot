@@ -9,6 +9,11 @@ jobs:
   build-and-smoke-test:
     runs-on: ubuntu-latest
 
+    # allow this job to push images to GHCR using the built-in GITHUB_TOKEN
+    permissions:
+      contents: read
+      packages: write
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -19,7 +24,7 @@ jobs:
           ls -la infra/docker || true
           ls -la src || true
 
-      - name: Build Docker image
+      - name: Build Docker image (local tag)
         run: |
           docker build -t chatbot:ci -f infra/docker/Dockerfile .
 
@@ -29,7 +34,6 @@ jobs:
 
       - name: Wait for app and smoke test
         run: |
-          # wait up to ~20s for server to boot
           for i in {1..20}; do
             if curl -sf http://127.0.0.1:8000/health > /dev/null; then
               echo "healthcheck OK"
@@ -43,10 +47,31 @@ jobs:
 
       - name: Show container logs on failure
         if: failure()
-        run: |
-          docker logs chatbot-ci || true
+        run: docker logs chatbot-ci || true
 
       - name: Stop container
         if: always()
+        run: docker stop chatbot-ci || true
+
+      # === NEW: login to GHCR and push the image ===
+      - name: Log in to GHCR
         run: |
-          docker stop chatbot-ci || true
+          echo "${{ secrets.GITHUB_TOKEN }}" | \
+          docker login ghcr.io -u ${{ github.actor }} --password-stdin
+
+      - name: Tag image for GHCR
+        run: |
+          OWNER_LOWER=$(echo "${{ github.repository_owner }}" | tr '[:upper:]' '[:lower:]')
+          IMAGE="ghcr.io/${OWNER_LOWER}/magic-bot"
+          SHA_TAG="${IMAGE}:${{ github.sha }}"
+          LATEST_TAG="${IMAGE}:latest"
+          echo "Using tags: $SHA_TAG and $LATEST_TAG"
+          docker tag chatbot:ci "$SHA_TAG"
+          docker tag chatbot:ci "$LATEST_TAG"
+
+      - name: Push image to GHCR
+        run: |
+          OWNER_LOWER=$(echo "${{ github.repository_owner }}" | tr '[:upper:]' '[:lower:]')
+          IMAGE="ghcr.io/${OWNER_LOWER}/magic-bot"
+          docker push "$IMAGE:${{ github.sha }}"
+          docker push "$IMAGE:latest"
