@@ -1,14 +1,22 @@
-version: "3.9"
-
 services:
-  api:
-    image: python:3.11-slim
-    working_dir: /app
-    volumes:
-      - ./:/app
+  magic-bot:
+    image: ghcr.io/matteosaadat/magic-bot:latest
+    container_name: magic-bot
     ports:
       - "8000:8000"
-    command: >
-      bash -lc "pip install --no-cache-dir -r requirements.txt &&
-                uvicorn app:app --host 0.0.0.0 --port 8000 --reload"
+    environment:
+      # put runtime env here later, e.g.:
+      # - ENV=prod
+      # - API_KEY=${API_KEY}
+      # for now we keep it empty
+      - PYTHONUNBUFFERED=1
+    restart: unless-stopped
 
+  watchtower:
+    image: containrrr/watchtower
+    container_name: watchtower
+    # Watch only the "magic-bot" container, check every 30s
+    command: --interval 30 magic-bot
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    restart: unless-stopped

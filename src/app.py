@@ -9,4 +9,4 @@ def health():
 
 @app.get("/")
 def hello():
-    return {"message": "hello v1"}
+    return {"message": "hello v1.1"}
