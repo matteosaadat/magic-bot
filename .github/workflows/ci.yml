@@ -1,77 +1,56 @@
+# ============================================================
+# CI WORKFLOW
+# ------------------------------------------------------------
+# This workflow runs on every Pull Request and push to `main`.
+# It ensures code quality and reliability by:
+#   - Installing dependencies
+#   - Linting with Ruff
+#   - Checking formatting with Black
+#   - Running all Pytest unit tests with coverage
+# If any step fails, the build fails.
+# ============================================================
+
 name: CI
 
 on:
-  push:
-    branches: [ "**" ]
   pull_request:
+  push:
+    branches: [ main ]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
-  build-and-smoke-test:
+  lint-and-test:
     runs-on: ubuntu-latest
-
-    # allow this job to push images to GHCR using the built-in GITHUB_TOKEN
-    permissions:
-      contents: read
-      packages: write
 
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Show tree (debug)
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: "pip"
+
+      - name: Install dependencies
         run: |
-          ls -la
-          ls -la infra/docker || true
-          ls -la src || true
+          python -m pip install --upgrade pip
+          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+          if [ -f requirements-dev.txt ]; then pip install -r requirements-dev.txt; fi
+          # Ensure core dev tools are present even if not listed
+          pip install -q ruff==0.6.9 black==24.8.0 pytest pytest-cov httpx
 
-      - name: Build Docker image (local tag)
-        run: |
-          docker build -t chatbot:ci -f infra/docker/Dockerfile .
+      - name: Ruff (lint)
+        run: ruff check .
 
-      - name: Run container (detached)
-        run: |
-          docker run -d --rm -p 8000:8000 --name chatbot-ci chatbot:ci
+      - name: Black (format check)
+        run: black --check --line-length=100 .
 
-      - name: Wait for app and smoke test
-        run: |
-          for i in {1..20}; do
-            if curl -sf http://127.0.0.1:8000/health > /dev/null; then
-              echo "healthcheck OK"
-              curl -sf http://127.0.0.1:8000/ | tee /tmp/root.json
-              exit 0
-            fi
-            sleep 1
-          done
-          echo "App did not become healthy in time"
-          exit 1
-
-      - name: Show container logs on failure
-        if: failure()
-        run: docker logs chatbot-ci || true
-
-      - name: Stop container
-        if: always()
-        run: docker stop chatbot-ci || true
-
-      # === NEW: login to GHCR and push the image ===
-      - name: Log in to GHCR
-        run: |
-          echo "${{ secrets.GITHUB_TOKEN }}" | \
-          docker login ghcr.io -u ${{ github.actor }} --password-stdin
-
-      - name: Tag image for GHCR
-        run: |
-          OWNER_LOWER=$(echo "${{ github.repository_owner }}" | tr '[:upper:]' '[:lower:]')
-          IMAGE="ghcr.io/${OWNER_LOWER}/magic-bot"
-          SHA_TAG="${IMAGE}:${{ github.sha }}"
-          LATEST_TAG="${IMAGE}:latest"
-          echo "Using tags: $SHA_TAG and $LATEST_TAG"
-          docker tag chatbot:ci "$SHA_TAG"
-          docker tag chatbot:ci "$LATEST_TAG"
-
-      - name: Push image to GHCR
-        run: |
-          OWNER_LOWER=$(echo "${{ github.repository_owner }}" | tr '[:upper:]' '[:lower:]')
-          IMAGE="ghcr.io/${OWNER_LOWER}/magic-bot"
-          docker push "$IMAGE:${{ github.sha }}"
-          docker push "$IMAGE:latest"
+      - name: Run tests
+        run: pytest -q --disable-warnings --maxfail=1 --cov=. --cov-report=term-missing

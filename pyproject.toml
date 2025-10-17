@@ -1,0 +1,70 @@
+# ===============================================
+# pyproject.toml
+# -----------------------------------------------
+# 📘 Purpose:
+#   Central configuration file for Python tools.
+#   Keeps build, lint, format, and test settings
+#   in one consistent place (modern Python standard).
+#
+# 🧩 Tools configured below:
+#   - 🖋 black → automatic code formatter
+#   - 🧹 ruff  → fast linter + import sorter
+#
+# 📁 Location:
+#   Must be in the project root (same folder as .git).
+#
+# ⚙️ Quick commands:
+#     black .             → format code
+#     ruff check .        → lint code
+#     ruff check . --fix  → auto-fix issues
+#
+# 🔗 Docs:
+#   https://peps.python.org/pep-0518/
+#   https://black.readthedocs.io/
+#   https://docs.astral.sh/ruff/
+# ===============================================
+
+# -----------------------------------------------
+# 🖋 Black (formatter)
+# -----------------------------------------------
+# Black enforces consistent style automatically.
+# It ignores most manual styling preferences and
+# ensures everyone’s code looks the same.
+[tool.black]
+line-length = 100            # max characters per line
+target-version = ["py311"]   # target Python version
+
+# -----------------------------------------------
+# 🧹 Ruff (linter + import sorter)
+# -----------------------------------------------
+# Ruff is a very fast linter written in Rust.
+# It checks for syntax errors, unused imports,
+# bad practices, and enforces clean code.
+#
+# It also replaces tools like:
+#   flake8, isort, pyflakes, pylint (for many rules)
+#
+# Run examples:
+#   ruff check . --fix       → fix lint issues
+#   ruff format .            → same as Black (optional)
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+
+[tool.ruff.lint]
+# Enable rule sets:
+# E,F  → base errors & flakes
+# B    → bugbear (common bugs)
+# C4   → comprehensions
+# SIM  → simplify code
+# I    → import sorting
+# UP   → upgrade syntax (e.g., f-strings)
+# more rules: https://docs.astral.sh/ruff/rules
+select = ["E","F","B","C4","SIM","I","UP"]
+ignore = ["E203"]  # avoid Black conflicts
+
+[tool.ruff.lint.isort]
+known-first-party = ["app"]
+combine-as-imports = true
+
+

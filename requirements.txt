@@ -1,2 +1,29 @@
+# ===============================================
+# requirements.txt
+# -----------------------------------------------
+# 📘 Purpose:
+#   Lists all Python dependencies needed to run
+#   this project (and sometimes dev tools).
+#
+# 🧩 How to use:
+#   Install everything with:
+#       pip install -r requirements.txt
+#
+#   To add a new package:
+#       pip install <package>
+#       pip freeze > requirements.txt   (to update list)
+#
+# ⚙️ Versions:
+#   Pin versions with "==" for reproducible builds.
+#   Use ".*" to allow patch updates (e.g. 0.115.*).
+#
+# 🧱 Optional split:
+#   You can also make:
+#       requirements-dev.txt  → for lint/test tools
+#
+# 🔗 Docs:
+#   https://pip.pypa.io/en/stable/user_guide/#requirements-files
+# ===============================================
+
 fastapi==0.115.*
 uvicorn[standard]==0.32.*

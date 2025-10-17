@@ -1,0 +1,21 @@
+services:
+  bot:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    image: magic-bot
+    ports:
+      - "8000:8000"
+    environment:
+      PYTHONPATH: "/app"
+      WATCHFILES_FORCE_POLLING: "1"
+      # APP_ENV defaults to dev in code; can override if needed
+    volumes:
+      - ./src:/app/src:rw,delegated
+      - ./.env.dev:/app/.env.dev:ro      # 👈 mount root-level file directly
+    command: >
+      uvicorn src.app:app
+      --host 0.0.0.0
+      --port 8000
+      --reload
+      --reload-include .env*
