@@ -1,0 +1,31 @@
+# ===============================================
+# .pre-commit-config.yaml
+# -----------------------------------------------
+# 📘 Purpose:
+#   Run Ruff (lint) and Black (format) locally
+#   BEFORE commits land in git. Dev sees & fixes
+#   issues immediately; CI only double-checks.
+#
+# 🧩 Hooks included:
+#   - ruff (lint, with autofix)
+#   - black (format)
+#
+# 🧠 Tips:
+#   - First commit may reformat many files.
+#   - Review diffs, learn the rules, commit again.
+# ===============================================
+
+repos:
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.6.9        # pin a version (update as needed)
+    hooks:
+      - id: ruff
+        # args: [--fix]  # allow safe autofixes; dev reviews the diff
+      - id: ruff-format  # optional: Ruff's formatter (kept after Black as safety)
+
+  - repo: https://github.com/psf/black
+    rev: 24.10.0       # pin a version (update as needed)
+    hooks:
+      - id: black
+        args: ["--check", "--line-length=100"]  # check only
+        # args: ["--line-length=100"]
