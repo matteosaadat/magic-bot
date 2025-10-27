@@ -27,5 +27,5 @@ repos:
     rev: 24.10.0       # pin a version (update as needed)
     hooks:
       - id: black
-        args: ["--check", "--line-length=100"]  # check only
+      args: ["--check", "--line-length=100"]  # check only
         # args: ["--line-length=100"]
