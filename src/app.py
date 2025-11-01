@@ -1,8 +1,10 @@
 # src/app.py
 from fastapi import FastAPI
+
 from src.settings import settings
 
-app = FastAPI(title=settings.app_name)          # or title=settings.APP_NAME
+app = FastAPI(title=settings.ENV)  # or title=settings.ENV
+
 
 @app.get("/healthz")
 def healthz():
@@ -10,14 +12,15 @@ def healthz():
         "ok": True,
         "env": settings.ENV,
         "debug": settings.DEBUG,
-        "app": settings.app_name,
+        "app": settings.ENV,
     }
 
 
 @app.get("/health")
 def health():
-    return {"status": "ok", "env": settings.app_env}
+    return {"status": "ok", "env": settings.ENV}
+
 
 @app.get("/")
 def hello():
-    return {"message": "hello v00.009"}
+    return {"message": "hello v00.01"}

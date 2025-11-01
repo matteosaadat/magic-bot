@@ -67,4 +67,7 @@ ignore = ["E203"]  # avoid Black conflicts
 known-first-party = ["app"]
 combine-as-imports = true
 
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+# pythonpath = ["src"]
 

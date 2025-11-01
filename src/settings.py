@@ -1,7 +1,9 @@
 # src/settings.py
 import os
+
 from pydantic import Field
 from pydantic_settings import BaseSettings, SettingsConfigDict
+
 
 class Settings(BaseSettings):
     # core
@@ -22,5 +24,6 @@ class Settings(BaseSettings):
     @property
     def app_name(self) -> str:
         return self.APP_NAME
+
 
 settings = Settings()

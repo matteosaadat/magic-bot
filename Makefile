@@ -1,5 +1,33 @@
 # ===============================================
 # Makefile — Developer ergonomics for lint/format
+
+# ===============================================
+# Minimal Makefile: build-only, test, and build
+# ===============================================
+PY := python
+PYTHONPATH_ABS := $(shell pwd)
+
+.PHONY: build-only test build
+
+# 1) Build image only (no checks)
+build-only:
+	docker build -t magic-bot:local .
+
+# 2) Run tests (passes if no tests collected)
+test:
+	@echo ">> Running pytest"
+	@PYTHONPATH=$(PYTHONPATH_ABS) $(PY) -m pytest -q || code=$$?; if [ $$code -eq 5 ]; then echo ">> No tests collected; treating as pass"; exit 0; else exit $$code; fi
+
+# 3) Full build: lint -> test -> docker build (fails fast)
+build:
+	@echo ">> Linting with Ruff"
+	ruff check .
+	@echo ">> Tests"
+	$(MAKE) test
+	@echo ">> Docker build"
+	$(MAKE) build-only
+
+
 # -----------------------------------------------
 
 # 1) See everything (no fixing)
@@ -26,8 +54,9 @@ fix-rule:
 	ruff check . --select $(CODE) --fix
 
 # 6) Let Black format everything (when you choose)
-fmt:
+format:
 	black .
 
 # 7) Full belt-and-suspenders after you’re happy
 all: fix-safe fmt check
+
