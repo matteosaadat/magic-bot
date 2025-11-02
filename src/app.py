@@ -23,4 +23,4 @@ def health():
 
 @app.get("/")
 def hello():
-    return {"message": "hello v00.01"}
+    return {"message": "hello v00.02"}
