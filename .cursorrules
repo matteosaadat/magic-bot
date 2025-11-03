@@ -1,0 +1,12 @@
+# Cursor AI Project Rules
+
+# 🧠 Purpose
+# Apply to all files in this project automatically.
+# These are like persistent system instructions.
+
+rules:
+- "Always include clear comments and docstrings."
+- "Use safe patterns (no eval, no exec)."
+- "When writing utilities, include helper functions and explain each step."
+- "When I select text with '# AI INSTRUCTION' comments at the top, use them as task context. Do not touch, edit or delete those texts."
+- "Follow Matteo's preferred code style: clear section headers, no unnecessary abstractions."

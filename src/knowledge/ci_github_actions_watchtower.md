@@ -1,0 +1,25 @@
+---
+title: "CI/CD: GitHub Actions → GHCR → EC2 + Watchtower"
+tags: [devops, ci/cd, docker, ghcr, watchtower, aws]
+tech: [github-actions, docker, ghcr, ec2]
+dates:
+  created: 2025-11-03
+summary: "Build Docker image in GitHub Actions, push to GHCR, EC2 pulls via Watchtower and restarts."
+---
+
+# Overview
+For the Matteo-bot (FastAPI) service, the CI builds and pushes to GHCR on every push to `main`.  
+An EC2 host runs **Watchtower** to auto-pull `ghcr.io/<org>/<repo>:latest` and restart the container.
+
+## Steps
+- GitHub Actions workflow:
+  - build image
+  - tag `:latest` and `:<git-sha>`
+  - push to GHCR
+- EC2:
+  - docker login to GHCR (OIDC later)
+  - Watchtower monitors container and updates on new image
+- Health check: FastAPI `/health` returns `200 OK`.
+
+## Notes
+- Future: pinned semantic tags, healthcheck + rollback, logs/metrics, and App Runner deployment with OIDC.
