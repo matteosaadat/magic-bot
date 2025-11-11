@@ -1,8 +1,47 @@
+# OS/editor junk
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+
+# VCS
+.git
+.gitignore
+
+# Python/env
+.venv
 __pycache__/
 *.pyc
-.venv/
-.git/
-.gitignore
-tests/
-infra/
+*.pyo
+*.pyd
 
+# Node
+node_modules/
+npm-debug.log*
+yarn-error.log*
+
+# Build outputs / caches
+dist/
+build/
+.cache/
+
+# Big data we don't need in the image
+src/data/cache/
+src/data/tmp/
+src/data/extracted/
+src/data/normalized/
+src/data/paraphrased/
+src/data/logs/
+
+# Raw sources we don't need at runtime
+src/knowledge/raw/
+src/**/raw/
+
+# Optional: exclude PDFs and other heavy assets, keep your DB/FAISS
+*.pdf
+*.zip
+*.tar
+*.tar.gz
+
+# Docker
+infra/**/.env*

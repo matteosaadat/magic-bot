@@ -1,0 +1,33 @@
+ermont, USA
+
+May 2014 - Jun 2015
+
+· Built internal tools and UI features for MISys Enterprise (ME), an industrial manufacturing ERP platform
+
+· Developed AngularJS + HTML5 framework to document the public API
+
+· Integrated Google Drive and Dropbox APIs to allow users to attach cloud-based files to application records
+
+· Designed and implemented a messaging system using Elgg, enabling user-to-user collaboration
+
+· Automated marketing-to-CRM data transfers via API scripts, improving team efficiency
+
+· Integrated Stripe payment processing for online invoicing and payments
+
+· Contributed prototypes and improvements used across operations and customer-facing modules
+
+Education
+
+Vermont Technical College
+
+B.S. | Software Engineering
+
+Randolph, VT
+
+Skills
+
+May 2015
+
+Libraries & Tools: React · Next.js · Redux · JQuery · AngularJS · Node.js · Tailwind · MUI · Styled Components · WordPress
+
+Langua

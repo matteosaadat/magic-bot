@@ -1,0 +1,15 @@
+& Tools: React · Next.js · Redux · JQuery · AngularJS · Node.js · Tailwind · MUI · Styled Components · WordPress
+
+Languages & Frameworks: PHP · Laravel · JavaScript (ES6+) · TypeScript · HTML5 · CSS3 · Sass · Python · SQL · JSX · JSON
+
+AI Tools & Workflows: Cursor · GitHub Copilot · ChatGPT/OpenAI · LLM Prompting · Prompt Engineering · AI Code Generation
+· AI-Assisted Debugging · Automated workflows
+
+Testing & Debugging: Postman · Jest · Jasmine · React Testing Library · Chrome DevTools · Lighthouse
+
+DevOps & Workflows: Git · Github · CI/CD · Npm · Vite · Webpack · Composer · FTP Deployment
+
+UI/UX Design: Intuitive UX · Responsive Design · A11y (Accessibility) · Figma (basic) · Design Systems · Prototyping ·
+Wireframing · User Flows · Mockups · user testing · Empathy · Artistic Design
+
+Soft Skills: Adaptable · Mentorship · Agile Scrum · Continuous Learning · Problem Solving · Time Manage

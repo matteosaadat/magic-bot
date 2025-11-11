@@ -1,100 +1,62 @@
-# =========================
-# Ingest & Search Makefile
-# =========================
-# Usage:
-#   make help
-#   make venv           # create .venv and install deps
-#   make ingest         # run the full ingest pipeline (normalize→paraphrase→dedup→embed→index)
-#   make search q='watchtower'
-#   make rebuild        # clean + ingest
-#   make clean          # delete DB + FAISS index
-#   make info           # show env + file locations
-#
-# Notes:
-# - Assumes scripts live in src/ingest and data under src/data.
-# - Defaults are easy to tweak via variables below.
+# ==============================
+# Ingest Makefile (src/ingest/)
+# ==============================
+SHELL := /bin/bash
 
-# --------- Paths ---------
-WORKDIR := src
-DB      := $(WORKDIR)/data/db/portfolio.db
-INDEX   := $(WORKDIR)/data/index/faiss.index
-RAW     := $(WORKDIR)/data/raw
-TMP     := $(WORKDIR)/data/tmp
-NORM    := $(TMP)/normalized
-PARA    := $(TMP)/paraphrased
-DEDUP   := $(TMP)/deduped
+# Python
+PY ?= python3
 
-# --------- Python ---------
-# Prefer the project venv if it exists; otherwise fallback to python3
-PY := $(shell [ -x .venv/bin/python ] && echo ".venv/bin/python" || echo "python3")
+# This Makefile's folder (…/src/ingest)
+INGEST_DIR := $(abspath $(dir $(lastword $(MAKEFILE_LIST))))
 
-# --------- Defaults ---------
-q ?= watchtower
+# Repo root assumed at one level up from src/
+# Adjust if your layout differs.
+ROOT := $(abspath $(INGEST_DIR)/..)
 
-# --------- Help ---------
-.PHONY: help
-help:
-	@echo ""
-	@echo "Targets:"
-	@echo "  make venv        - Create .venv and install dependencies"
-	@echo "  make ingest      - Run full ingest pipeline into $(DB) and $(INDEX)"
-	@echo "  make search q=.. - Search the index for a query (default: '$(q)')"
-	@echo "  make rebuild     - clean + ingest"
-	@echo "  make clean       - Remove DB/index and temp artifacts"
-	@echo "  make info        - Show Python/env and important paths"
-	@echo ""
+# Inputs / Outputs
+RAW   ?= $(ROOT)/knowledge
+DB    ?= $(ROOT)/data/db/portfolio.db
+INDEX ?= $(ROOT)/data/index/faiss.index
 
-# --------- Env setup ---------
-.PHONY: venv
-venv:
-	@echo ">> Creating .venv and installing deps..."
-	@test -d .venv || python3 -m venv .venv
-	@.venv/bin/pip install -U pip
-	@.venv/bin/pip install -r requirements.txt
+# Optional extra args like:
+# make ingest ARGS="--disable-normalize --disable-paraphrase --disable-dedup --disable-embed"
+ARGS ?=
 
-# --------- Ingest (one-shot) ---------
-.PHONY: ingest
+.PHONY: ingest collect normalize paraphrase dedup embed info paths
+
+paths:
+	@echo "INGEST_DIR: $(INGEST_DIR)"
+	@echo "ROOT      : $(ROOT)"
+	@echo "RAW       : $(RAW)"
+	@echo "DB        : $(DB)"
+	@echo "INDEX     : $(INDEX)"
+
 ingest:
-	@echo ">> Ingest starting (normalize→paraphrase→dedup→embed→index)"
-	@$(PY) $(WORKDIR)/ingest/run_ingest.py \
-		--src $(RAW) \
-		--db $(DB) \
-		--faiss $(INDEX)
+	@echo ">> Ingest starting (collect→normalize→paraphrase→dedup→embed)"
+	@echo ">> CMD: $(PY) \"$(INGEST_DIR)/run_ingest.py\" --src \"$(RAW)\" --db \"$(DB)\" --faiss \"$(INDEX)\" $(ARGS)"
+	@$(PY) "$(INGEST_DIR)/run_ingest.py" \
+		--src "$(RAW)" \
+		--db "$(DB)" \
+		--faiss "$(INDEX)" \
+		$(ARGS)
 	@echo ">> Ingest complete."
 	@$(MAKE) info
 
-# --------- Ingest (step-by-step) ---------
-.PHONY: ingest-steps
-ingest-steps:
-	@echo ">> 1) Normalize"
-	@$(PY) $(WORKDIR)/ingest/1_normalize.py --input $(RAW) --output $(NORM)
-	@echo ">> 2) Paraphrase"
-	@$(PY) $(WORKDIR)/ingest/2_paraphrase.py --input $(NORM) --output $(PARA)
-	@echo ">> 3) Dedup"
-	@$(PY) $(WORKDIR)/ingest/3_dedup.py --input $(PARA) --output $(DEDUP)
-	@echo ">> 4) Embed + Index"
-	@$(PY) $(WORKDIR)/ingest/4_embed.py --input $(DEDUP) --db $(DB) --faiss $(INDEX)
-	@echo ">> Done."
+collect:
+	@$(PY) "$(INGEST_DIR)/0_collect_extract.py" --src "$(RAW)"
 
-# --------- Search ---------
-.PHONY: search
-search:
-	@$(PY) $(WORKDIR)/ingest/6_search.py --db $(DB) --faiss $(INDEX) --query "$(q)"
+normalize:
+	@$(PY) "$(INGEST_DIR)/1_normalize.py" --src "$(RAW)"
 
-# --------- Clean / Rebuild ---------
-.PHONY: clean
-clean:
-	@echo ">> Removing DB and FAISS index and temp dirs"
-	@rm -f $(DB) $(INDEX)
-	@rm -rf $(TMP)
+paraphrase:
+	@$(PY) "$(INGEST_DIR)/2_paraphrase.py" --src "$(RAW)"
 
-.PHONY: rebuild
-rebuild: clean ingest
+dedup:
+	@$(PY) "$(INGEST_DIR)/3_dedup.py" --src "$(RAW)" --db "$(DB)"
 
-# --------- Info ---------
-.PHONY: info
+embed:
+	@$(PY) "$(INGEST_DIR)/4_embed.py" --db "$(DB)" --faiss "$(INDEX)"
+
 info:
-	@echo ">> Python: $(PY)"
-	@$(PY) -c "import sys,platform;print('Python',sys.version);print('Platform',platform.platform())"
-	@echo "DB:    $(DB)   -> $$([ -f $(DB) ] && echo exists || echo missing)"
-	@echo "Index: $(INDEX) -> $$([ -f $(INDEX) ] && echo exists || echo missing)"
+	@echo ">> DB:    $(DB)"
+	@echo ">> FAISS: $(INDEX)"

@@ -1,0 +1,19 @@
+ systems, CMS tools, and admin dashboards
+
+· Designed visual branding assets such as logos, illustrations, and animations, balancing visual creativity with UX clarity
+
+· Built responsive websites and mobile-friendly layouts with a focus on accessibility and performance
+
+· Focused on UX, A11y, performance, and usability across platforms
+
+· Architected modern UI systems using Sass, JavaScript, and reusable component design principles
+
+· Handled end-to-end delivery including planning, prototyping, coding, testing, and deployment
+
+· Collaborated directly with clients on requirements gathering, product direction, and continuous improvement
+
+· Leveraged Generative AI tools to accelerate prototyping, boilerplate generation, and visual asset creation
+
+· Built a custom pipeline for converting AI code suggestions into reusable, scalable components
+
+· Refined and debugged AI-generated code to meet 

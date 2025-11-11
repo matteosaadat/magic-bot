@@ -1,0 +1,147 @@
+Mahdi Saadat 
+
+Full Stack Developer  |  Hardwick, Vermont, USA  |  US Citizen  |  (415) 368-7981  |  mahdi.saadat.work@gmail.com  |
+  www.BlackLeadPencil.com  |  linkedin.com/in/matteo-saadat
+
+Profile Summary
+
+Experienced Senior Full-Stack Engineer with over 10 years of success designing, building, and delivering responsive, scalable 
+
+web applications across both modern and legacy stacks. Skilled in React, Next.js, PHP, and Laravel, with a strong foundation 
+
+in Node, JavaScript (ES6+), TypeScript, and intuitive UI/UX design. Experienced in architecting Laravel + React/Next.js 
+
+SaaS platforms from concept to production — including a real-world SaaS for "Online Competition Platform" and a custom 
+
+"AI-powered Chatbot System" built with modern frameworks and LLM integration.
+
+Adept at transforming outdated codebases into modular, maintainable systems while implementing full-stack functionality, 
+
+REST APIs, and CI/CD pipelines. Experienced in AI-assisted development using GitHub Copilot, Cursor and LLM 
+
+prompting — architecting, refining and debugging AI-generated code into clean, scalable production software. Known for 
+
+taking ownership, solving complex problems, and consistently delivering stable, production-grade products used in real 
+
+environments.
+
+Work Experience
+
+Black Lead Pencil
+
+Freelance Full-Stack Developer & UI/UX Designer
+
+Vermont/New Hampshire, USA
+
+May 2011 - Present
+
+· Delivered full-stack and front-end solutions for small businesses, artists, and entrepreneurs
+
+· Built PHP/Laravel + React/Next.js SaaS platforms with reusable component systems, CMS tools, and admin dashboards
+
+· Designed visual branding assets such as logos, illustrations, and animations, balancing visual creativity with UX clarity
+
+· Built responsive websites and mobile-friendly layouts with a focus on accessibility and performance
+
+· Focused on UX, A11y, performance, and usability across platforms
+
+· Architected modern UI systems using Sass, JavaScript, and reusable component design principles
+
+· Handled end-to-end delivery including planning, prototyping, coding, testing, and deployment
+
+· Collaborated directly with clients on requirements gathering, product direction, and continuous improvement
+
+· Leveraged Generative AI tools to accelerate prototyping, boilerplate generation, and visual asset creation
+
+· Built a custom pipeline for converting AI code suggestions into reusable, scalable components
+
+· Refined and debugged AI-generated code to meet production standards, improving delivery speed
+
+· Used AI tools to prototype UI/UX solutions, test edge cases, and accelerate complex workflows
+
+Nextmark Inc.
+
+Senior Front End Software Engineer
+
+New Hampshire, USA
+
+May 2015 - Feb 2025
+
+· Led front-end architecture for Bionic, a large-scale media planning SaaS platform used by 100+ advertising teams
+
+· Engineered scalable UI systems using modular Sass, component libraries, and hierarchical view structures
+
+· Rewrote 14,000+ lines of CSS into an inheritable Sass system, blending artistic clarity with scalable, maintainable UI.
+
+· Reduced initial load time from 9s to <5s by caching and preprocessing bulk HTML files—an elegant speed-up that made 
+
+performance feel effortless.
+
+· Improved developer experience and velocity by proactively frontloading UI assets before each release cycle, reducing 
+
+bottlenecks and raising team confidence — an effort that directly contributed to receiving a raise
+
+· Modernized 50+ legacy pages into maintainable component based architecture, improving code reuse and team velocity
+
+· Built pagination and bulk-edit systems to optimize data-heavy workflows
+
+· Contributed to UX planning, user workflows, and design refinement in partnership with the design team
+
+· Collaborated in Agile sprints with product, QA, and backend teams
+
+· Mentored junior developers and contributed to cross-team technical alignment
+
+MYSys Inc.
+
+Software Developer Intern
+
+Vermont, USA
+
+May 2014 - Jun 2015
+
+· Built internal tools and UI features for MISys Enterprise (ME), an industrial manufacturing ERP platform
+
+· Developed AngularJS + HTML5 framework to document the public API
+
+· Integrated Google Drive and Dropbox APIs to allow users to attach cloud-based files to application records
+
+· Designed and implemented a messaging system using Elgg, enabling user-to-user collaboration
+
+· Automated marketing-to-CRM data transfers via API scripts, improving team efficiency
+
+· Integrated Stripe payment processing for online invoicing and payments
+
+· Contributed prototypes and improvements used across operations and customer-facing modules
+
+Education
+
+Vermont Technical College
+
+B.S. | Software Engineering
+
+Randolph, VT
+
+Skills
+
+May 2015
+
+Libraries & Tools:  React · Next.js · Redux · JQuery · AngularJS · Node.js · Tailwind · MUI · Styled Components · WordPress
+
+Languages & Frameworks:  PHP · Laravel · JavaScript (ES6+) · TypeScript · HTML5 · CSS3 · Sass · Python · SQL · JSX · JSON
+
+AI Tools & Workflows:  Cursor · GitHub Copilot · ChatGPT/OpenAI · LLM Prompting · Prompt Engineering · AI Code Generation 
+· AI-Assisted Debugging · Automated workflows
+
+Testing & Debugging:  Postman · Jest · Jasmine · React Testing Library · Chrome DevTools · Lighthouse
+
+DevOps & Workflows:  Git · Github · CI/CD · Npm · Vite · Webpack · Composer · FTP Deployment
+
+UI/UX Design:  Intuitive UX · Responsive Design · A11y (Accessibility) · Figma (basic) · Design Systems · Prototyping · 
+Wireframing · User Flows · Mockups · user testing · Empathy · Artistic Design
+
+Soft Skills:  Adaptable · Mentorship · Agile Scrum · Continuous Learning · Problem Solving · Time Management · Cross-team 
+Collaboration · Product Ownership · Self-Starter · Client Communication
+
+Languages Spoken:  English (Fluent) · Italian (Fluent) · Farsi (Native)
+
+

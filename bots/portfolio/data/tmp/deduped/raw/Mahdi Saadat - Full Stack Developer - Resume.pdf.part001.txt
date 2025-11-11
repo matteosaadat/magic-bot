@@ -1,0 +1,25 @@
+ransforming outdated codebases into modular, maintainable systems while implementing full-stack functionality,
+
+REST APIs, and CI/CD pipelines. Experienced in AI-assisted development using GitHub Copilot, Cursor and LLM
+
+prompting — architecting, refining and debugging AI-generated code into clean, scalable production software. Known for
+
+taking ownership, solving complex problems, and consistently delivering stable, production-grade products used in real
+
+environments.
+
+Work Experience
+
+Black Lead Pencil
+
+Freelance Full-Stack Developer & UI/UX Designer
+
+Vermont/New Hampshire, USA
+
+May 2011 - Present
+
+· Delivered full-stack and front-end solutions for small businesses, artists, and entrepreneurs
+
+· Built PHP/Laravel + React/Next.js SaaS platforms with reusable component systems, CMS tools, and admin dashboards
+
+· Designed visual branding assets such as logos, illustrations, and animation

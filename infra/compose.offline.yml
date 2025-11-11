@@ -1,0 +1,42 @@
+version: "3.9"
+
+services:
+  ollama:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.ollama
+    container_name: ollama
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama_models:/root/.ollama
+    healthcheck:
+      test: ["CMD", "curl", "-sSf", "http://localhost:11434/api/tags"]
+      interval: 15s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
+    restart: unless-stopped
+    environment:
+      - OLLAMA_KEEP_ALIVE=24h
+
+  app:
+    build:
+      context: ..
+      dockerfile: infra/docker/Dockerfile.app
+    container_name: matteo-bot
+    depends_on:
+      ollama:
+        condition: service_healthy
+    environment:
+      - USE_OLLAMA=1
+      - OLLAMA_BASE_URL=http://ollama:11434
+      - OLLAMA_MODEL=${OLLAMA_MODEL}
+      # Add any other envs (e.g., OPENAI_API_KEY) if you want dual-mode
+    ports:
+      - "8000:8000"
+    restart: unless-stopped
+
+volumes:
+  ollama_models:
+    # Named volume stores the pulled model so future runs are fully offline

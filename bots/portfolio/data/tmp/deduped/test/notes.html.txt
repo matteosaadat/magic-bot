@@ -1,0 +1,6 @@
+Notes
+Native language: Persian (aka Farsi). Comfortable with Italian.
+// code block should remain intact
+function hello() {
+ return "ciao";
+}

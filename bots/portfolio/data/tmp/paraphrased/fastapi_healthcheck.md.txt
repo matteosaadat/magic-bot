@@ -1,0 +1,15 @@
+---
+title: "FastAPI health endpoint"
+tags: [backend, fastapi, ops]
+tech: [python, fastapi]
+dates:
+ created: 2025-11-03
+summary: "Expose a simple /health route for uptime checks."
+---
+
+# Health Endpoint
+Expose `GET /health` that returns JSON `{"status":"ok"}` and HTTP 200.
+Used by container orchestrations and uptime monitors.
+
+## Testing
+- pytest client: `client.get("/health")` should be 200 and body contains `"ok"`.

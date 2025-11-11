@@ -1,0 +1,15 @@
+paths:
+  raw: "src/data/raw"
+  db: "src/data/db/portfolio.db"
+  faiss: "src/data/index/faiss.index"
+  tmp: "src/data/tmp"
+
+ingest:
+  enable_paraphrase: true
+  ocr_images: false         # set true if you install Tesseract + pytesseract
+  chunk_size: 900
+  chunk_overlap: 120
+
+search:
+  alpha: 0.5
+  top_k: 10

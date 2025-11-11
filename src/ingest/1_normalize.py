@@ -1,86 +1,159 @@
+#!/usr/bin/env python3
+# =============================================================
+# 1_normalize.py
+# -------------------------------------------------------------
 # AI INSTRUCTION:
-# Create a Python module in this file that defines a safe text normalization utility for Markdown or plain text.
-# It should:
+# Create a Python module that defines a safe text normalization
+# utility for Markdown or plain text. It should:
 # - Strip control characters (except newlines/tabs)
 # - Collapse redundant whitespace
 # - Normalize Unicode (NFKC) and unescape HTML entities
 # - Protect and restore fenced code blocks (``` or ~~~)
 # - Collapse 3+ newlines into max 2
-# Return a `normalize_text(raw: str) -> str` function.
-# Include helper functions `_protect_code_blocks` and `_restore_code_blocks`.
-# Use `re`, `unicodedata`, and `html.unescape`. 
-# Add clear comments explaining each section.
+# Chunk output to --chunk-size with --chunk-overlap characters
+# Write .txt files under --out mirroring input subfolders
+# Accept BOTH (--input/--output) and (--in/--out).
+# Print a summary at the end.
+# =============================================================
 
-
-import re
-import unicodedata
+from __future__ import annotations
+import argparse
 import html
+import re
+import sys
+import unicodedata
+from pathlib import Path
+from typing import List, Tuple
 
-# -------------------------------------
-# Helper: Protect fenced code blocks (``` or ~~~) in Markdown
-# Replaces code blocks with placeholders, returning (text, code_blocks) tuple.
-def _protect_code_blocks(text):
-    # Pattern matches both ``` and ~~~ fenced code blocks 
-    pattern = re.compile(
-        r"(^|\n)(?P<fence>(`{3,}|~{3,}))[^\n]*\n"    # opening fence (with optional lang)
-        r"(?P<code>.*?)(\n(?P=fence)[ \t]*\n?)",     # content and closing fence
-        re.DOTALL
-    )
-    code_blocks = []
-    def _replace(m):
-        idx = len(code_blocks)
-        code_blocks.append(m.group())
-        return f"\n@@CODEBLOCK_{idx}@@\n"
-    protected = pattern.sub(_replace, text)
-    return protected, code_blocks
+# -------- regexes
+_WS = re.compile(r"[ \t]+")
+_MULTI_NL = re.compile(r"\n{3,}")
+_CTRL = re.compile(r"[\u0000-\u0008\u000b\u000c\u000e-\u001f]")  # keep \n and \t
+# fenced code: ```...``` or ~~~...~~~
+_CODE_FENCE = re.compile(r"(^```.*?^```)|(^~~~.*?^~~~)", re.DOTALL | re.MULTILINE)
 
-# -------------------------------------
-# Helper: Restore code block placeholders to original code blocks
-def _restore_code_blocks(text, code_blocks):
-    def _restore(m):
+def _protect_code_blocks(text: str) -> Tuple[str, List[str]]:
+    """Replace fenced code blocks with tokens we can restore later."""
+    stash: List[str] = []
+    def _repl(m: re.Match) -> str:
+        stash.append(m.group(0))
+        return f"[[[CODE_{len(stash)-1}]]]"
+    return _CODE_FENCE.sub(_repl, text), stash
+
+def _restore_code_blocks(text: str, stash: List[str]) -> str:
+    def _repl(m: re.Match) -> str:
         idx = int(m.group(1))
-        return code_blocks[idx]
-    restored = re.sub(r"@@CODEBLOCK_(\d+)@@", _restore, text)
-    return restored
+        return stash[idx] if 0 <= idx < len(stash) else m.group(0)
+    return re.sub(r"\[\[\[CODE_(\d+)\]\]\]", _repl, text)
 
-# -------------------------------------
-# Main normalization function
-def normalize_text(raw: str) -> str:
-    """
-    Normalizes input Markdown or plain text.
-    - Strips control characters (except newlines/tabs)
-    - Collapses redundant whitespace
-    - Normalizes Unicode (NFKC)
-    - Unescapes HTML entities
-    - Protects and restores fenced code blocks
-    - Collapses 3+ consecutive newlines into max 2
-    """
-    # 1. Protect code blocks
-    protected, code_blocks = _protect_code_blocks(raw)
+def normalize_text(s: str) -> str:
+    # Unicode normalize
+    s = unicodedata.normalize("NFKC", s)
+    # Unescape HTML entities (&amp;, &lt;, ...)
+    s = html.unescape(s)
+    # Protect code fences
+    s, stash = _protect_code_blocks(s)
+    # Strip control chars (but keep newlines/tabs)
+    s = _CTRL.sub("", s)
+    # Collapse intra-line whitespace
+    s = _WS.sub(" ", s)
+    # Trim trailing spaces per line
+    s = re.sub(r"[ \t]+\n", "\n", s)
+    # Collapse 3+ newlines
+    s = _MULTI_NL.sub("\n\n", s)
+    # Restore code fences
+    s = _restore_code_blocks(s, stash)
+    return s.strip()
 
-    # 2. Strip unwanted control chars (allow \n, \t)
-    #   \x00-\x08, \x0b-\x0c, \x0e-\x1f, \x7f
-    cleaned = re.sub(r"[^\S\r\n\t]", " ", protected) # replace all remaining whitespace except \n\t with space
-    cleaned = re.sub(r"[\x00-\x08\x0b\x0c\x0e-\x1f\x7f]", "", cleaned)
+def chunk_text(s: str, chunk_size: int, overlap: int) -> List[str]:
+    if chunk_size <= 0:
+        return [s] if s else []
+    n = len(s)
+    if n == 0:
+        return []
+    chunks: List[str] = []
+    i = 0
+    step = max(1, chunk_size - overlap)
+    while i < n:
+        j = min(n, i + chunk_size)
+        chunks.append(s[i:j])
+        i += step
+    return chunks
 
-    # 3. Normalize Unicode (NFKC)
-    cleaned = unicodedata.normalize("NFKC", cleaned)
+def discover_inputs(input_path: Path) -> List[Path]:
+    """Return a list of .txt files. If a file was passed, return it if .txt."""
+    if input_path.is_file():
+        return [input_path] if input_path.suffix.lower() == ".txt" else []
+    if input_path.is_dir():
+        return [p for p in input_path.rglob("*.txt") if p.is_file()]
+    return []
 
-    # 4. Unescape HTML entities
-    cleaned = html.unescape(cleaned)
+def write_mirrored(out_root: Path, in_root: Path, src_file: Path, chunk_idx: int, content: str) -> Path:
+    rel = src_file.relative_to(in_root)  # preserve subfolders
+    # For chunks, append .partNN before .txt
+    stem = rel.stem
+    suffix = rel.suffix  # ".txt"
+    rel_parent = rel.parent
+    if chunk_idx is None:
+        out_file = out_root / rel_parent / f"{stem}{suffix}"
+    else:
+        out_file = out_root / rel_parent / f"{stem}.part{chunk_idx:03d}{suffix}"
+    out_file.parent.mkdir(parents=True, exist_ok=True)
+    out_file.write_text(content, encoding="utf-8")
+    return out_file
 
-    # 5. Collapse redundant whitespace (spaces/tabs)
-    cleaned = re.sub(r"[ \t]+", " ", cleaned)
+def parse_args(argv: List[str]) -> argparse.Namespace:
+    p = argparse.ArgumentParser(description="Normalize and chunk collected text files.")
+    # Accept both styles:
+    p.add_argument("--input", "--in", dest="inp", required=True, help="Input directory of .txt (from collect) or a single .txt")
+    p.add_argument("--output", "--out", dest="out", required=True, help="Output directory for normalized chunks")
+    p.add_argument("--chunk-size", type=int, default=900)
+    p.add_argument("--chunk-overlap", type=int, default=120)
+    return p.parse_args(argv)
 
-    # 6. Collapse 3+ consecutive newlines to max 2
-    cleaned = re.sub(r"\n{3,}", "\n\n", cleaned)
+def main(argv: List[str]) -> int:
+    args = parse_args(argv)
+    in_path = Path(args.inp).resolve()
+    out_root = Path(args.out).resolve()
+    out_root.mkdir(parents=True, exist_ok=True)
 
-    # 7. Strip spaces at line boundaries
-    cleaned = re.sub(r"[ \t]+\n", "\n", cleaned)
-    cleaned = re.sub(r"\n[ \t]+", "\n", cleaned)
+    print(f"== normalize ==")
+    print(f"in : {in_path}")
+    print(f"out: {out_root}")
+    print(f"chunk_size={args['chunk_size'] if isinstance(args, dict) else args.chunk_size} overlap={args['chunk_overlap'] if isinstance(args, dict) else args.chunk_overlap}")
 
-    # 8. Restore code blocks
-    restored = _restore_code_blocks(cleaned, code_blocks)
+    files = discover_inputs(in_path)
+    if not files:
+        print("!! No .txt files found to normalize. (Did collect run?)")
+        return 0
 
-    # 9. Final trim
-    return restored.strip()
+    written = 0
+    for f in files:
+        try:
+            raw = f.read_text(encoding="utf-8", errors="replace")
+        except Exception as e:
+            print(f"!! Failed to read {f}: {e}")
+            continue
+        norm = normalize_text(raw)
+        chunks = chunk_text(norm, args.chunk_size, args.chunk_overlap)
+
+        # If text is small, still write at least one chunk
+        if not chunks:
+            chunks = [norm]
+
+        if len(chunks) == 1:
+            of = write_mirrored(out_root, in_path if in_path.is_dir() else f.parent, f, None, chunks[0])
+            print(f">> {f}  →  {of}  ({len(chunks[0])} chars)")
+            written += 1
+        else:
+            for ci, ch in enumerate(chunks):
+                of = write_mirrored(out_root, in_path if in_path.is_dir() else f.parent, f, ci, ch)
+                if ci == 0:
+                    print(f">> {f}  →  {of.parent}/{f.stem}.part###.txt  (chunked x{len(chunks)})")
+            written += len(chunks)
+
+    print(f"== normalize stats == {{'inputs': {len(files)}, 'written': {written}}}")
+    return 0
+
+if __name__ == "__main__":
+    sys.exit(main(sys.argv[1:]))

@@ -6,48 +6,54 @@
 #   this project (and sometimes dev tools).
 #
 # 🧩 How to use:
-#   Install everything with:
-#       pip install -r requirements.txt
-#
-#   To add a new package:
-#       pip install <package>
-#       pip freeze > requirements.txt   (to update list)
+#   pip install -r requirements.txt
 #
 # ⚙️ Versions:
 #   Pin versions with "==" for reproducible builds.
 #   Use ".*" to allow patch updates (e.g. 0.115.*).
-#
-# 🧱 Optional split:
-#   You can also make:
-#       requirements-dev.txt  → for lint/test tools
-#
-# 🔗 Docs:
-#   https://pip.pypa.io/en/stable/user_guide/#requirements-files
 # ===============================================
 
+# --- Core app ---
 fastapi==0.115.*
 uvicorn[standard]==0.32.*
-uvicorn[standard]
 watchfiles
+pydantic==2.9.2
+pydantic-settings>=2.4,<3
+httpx
+orjson==3.10.7
+python-dotenv==1.0.1
+click==8.1.7
+tqdm==4.66.5
+numpy==1.26.4
+pandas==2.2.2
+regex==2024.9.11
+
+# --- AI / NLP / Vector ---
+faiss-cpu==1.8.0.post1
+sentence-transformers==3.2.1
+simhash==2.1.2
+
+# --- Data / Storage ---
+sqlite-utils==3.37
+
+# --- File / Parsing ---
+python-frontmatter
+markdown-it-py
+pdfminer.six==20240706
+pymupdf==1.24.*
+Pillow==11.0.*
+python-docx
+beautifulsoup4
+lxml
+striprtf
+openpyxl
+
+# --- Image / OCR (optional) ---
+pytesseract
+
+# --- Dev tools ---
 ruff==0.14.0
 black==25.9.0
 pre-commit==4.3.0
 pytest==8.4.2
 pytest-cov==7.0.0
-httpx
-pydantic-settings>=2.4,<3
-aiss-cpu==1.8.0.post1
-sentence-transformers==3.2.1
-simhash==2.1.2
-sqlite-utils==3.37
-python-dotenv==1.0.1
-pydantic==2.9.2
-tqdm==4.66.5
-click==8.1.7
-orjson==3.10.7
-numpy==1.26.4
-pandas==2.2.2
-regex==2024.9.11
-faiss-cpu
-python-frontmatter
-markdown-it-py

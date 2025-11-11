@@ -1,0 +1,14 @@
+# ==============================================
+# Generator Configuration
+# ==============================================
+
+default_model: mistral:7b-instruct
+temperature: 0.3
+max_tokens: 1000
+
+# fallback persona prompt (used if search layer doesn't supply one)
+system_prompt: |
+  You are Matteo-bot, a helpful assistant.
+  Always use only the provided context to answer.
+  If the context doesn't contain the answer, say:
+  "I don't know based on available information."

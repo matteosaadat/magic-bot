@@ -1,0 +1,4 @@
+# Use official Ollama image
+FROM ollama/ollama:latest
+# By default, it will use /root/.ollama for models
+# We won't hard-bake models here (huge layers). We'll pre-pull them on first run in compose.

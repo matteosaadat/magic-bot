@@ -1,0 +1,25 @@
+for converting AI code suggestions into reusable, scalable components
+
+· Refined and debugged AI-generated code to meet production standards, improving delivery speed
+
+· Used AI tools to prototype UI/UX solutions, test edge cases, and accelerate complex workflows
+
+Nextmark Inc.
+
+Senior Front End Software Engineer
+
+New Hampshire, USA
+
+May 2015 - Feb 2025
+
+· Led front-end architecture for Bionic, a large-scale media planning SaaS platform used by 100+ advertising teams
+
+· Engineered scalable UI systems using modular Sass, component libraries, and hierarchical view structures
+
+· Rewrote 14,000+ lines of CSS into an inheritable Sass system, blending artistic clarity with scalable, maintainable UI.
+
+· Reduced initial load time from 9s to <5s by caching and preprocessing bulk HTML files—an elegant speed-up that made
+
+performance feel effortless.
+
+· Improved developer experience and velocity by

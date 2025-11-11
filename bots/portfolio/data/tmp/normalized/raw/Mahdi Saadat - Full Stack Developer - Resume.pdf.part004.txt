@@ -1,0 +1,27 @@
+ HTML files—an elegant speed-up that made
+
+performance feel effortless.
+
+· Improved developer experience and velocity by proactively frontloading UI assets before each release cycle, reducing
+
+bottlenecks and raising team confidence — an effort that directly contributed to receiving a raise
+
+· Modernized 50+ legacy pages into maintainable component based architecture, improving code reuse and team velocity
+
+· Built pagination and bulk-edit systems to optimize data-heavy workflows
+
+· Contributed to UX planning, user workflows, and design refinement in partnership with the design team
+
+· Collaborated in Agile sprints with product, QA, and backend teams
+
+· Mentored junior developers and contributed to cross-team technical alignment
+
+MYSys Inc.
+
+Software Developer Intern
+
+Vermont, USA
+
+May 2014 - Jun 2015
+
+· Built internal tools and UI features for MISys Enterprise (ME), an industrial manufa

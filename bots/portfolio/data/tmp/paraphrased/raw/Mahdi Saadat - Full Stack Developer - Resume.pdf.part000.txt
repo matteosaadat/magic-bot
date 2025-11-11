@@ -1,0 +1,20 @@
+Mahdi Saadat
+
+Full Stack Developer | Hardwick, Vermont, USA | US Citizen | (415) 368-7981 | mahdi.saadat.work@gmail.com |
+ www.BlackLeadPencil.com | linkedin.com/in/matteo-saadat
+
+Profile Summary
+
+Experienced Senior Full-Stack Engineer with over 10 years of success designing, building, and delivering responsive, scalable
+
+web applications across both modern and legacy stacks. Skilled in React, Next.js, PHP, and Laravel, with a strong foundation
+
+in Node, JavaScript (ES6+), TypeScript, and intuitive UI/UX design. Experienced in architecting Laravel + React/Next.js
+
+SaaS platforms from concept to production — including a real-world SaaS for "Online Competition Platform" and a custom
+
+"AI-powered Chatbot System" built with modern frameworks and LLM integration.
+
+Adept at transforming outdated codebases into modular, maintainable systems while implementing full-stack functionality,
+
+REST API
